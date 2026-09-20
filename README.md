@@ -21,11 +21,11 @@ graph LR
     ENC[Rotary Encoder] --> InpTask
 
     %% FreeRTOS Tasks
-    SensTask(SensorTask [P2])
-    MonTask(MonitorTask [P1])
-    InpTask(InputTask [P3])
-    DispTask(DisplayTask [P1])
-    AlrmTask(AlarmTask [P4])
+    SensTask("SensorTask [P2]")
+    MonTask("MonitorTask [P1]")
+    InpTask("InputTask [P3]")
+    DispTask("DisplayTask [P1]")
+    AlrmTask("AlarmTask [P4]")
 
     %% FreeRTOS IPC
     SQ[(sensorQueue)]
