@@ -7,17 +7,29 @@ void DisplayTask(void *pvParameters) {
     struct SensorData receivedData;
 
     for (;;) {
-        // Wait in the Blocked state until fresh data arrives in the queue
         if (xQueueReceive(sensorQueue, &receivedData, portMAX_DELAY) == pdPASS) {
             
-            // Protect the terminal output with a mutex to prevent text overlapping
             xSemaphoreTake(serialMutex, portMAX_DELAY);
             
-            // Exact initial OLED output format required by the lab manual[cite: 2]
             printf("\n--------------------\n");
             printf("ROOM MONITOR\n");
-            printf("Temperature\n");
-            printf("%.1f C\n", receivedData.temperature);
+            
+            // Switch output based on encoder position
+            switch(currentDisplayMode) {
+                case DisplayMode::TEMPERATURE:
+                    printf("Temperature\n%.1f C\n", receivedData.temperature);
+                    break;
+                case DisplayMode::HUMIDITY:
+                    printf("Humidity\n%.1f %%\n", receivedData.humidity);
+                    break;
+                case DisplayMode::LIGHT:
+                    printf("Light Level\n%d %%\n", receivedData.lightLevel);
+                    break;
+                case DisplayMode::MOTION:
+                    printf("Motion\n%s\n", receivedData.motionDetected ? "DETECTED" : "Clear");
+                    break;
+            }
+            
             printf("--------------------\n");
             
             xSemaphoreGive(serialMutex);
