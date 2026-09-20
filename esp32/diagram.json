@@ -8,7 +8,11 @@
   "parts": [
     { "type": "board-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
     { "type": "wokwi-dht22", "id": "dht", "top": -100, "left": 250, "attrs": {} },
-    { "type": "wokwi-photoresistor-sensor", "id": "ldr", "top": 50, "left": 250, "attrs": {} }
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr", "top": 50, "left": 250, "attrs": {} },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir", "top": 200, "left": 250, "attrs": {} },
+    { "type": "wokwi-ky-040", "id": "encoder", "top": 350, "left": 250, "attrs": {} },
+    { "type": "board-ssd1306", "id": "oled", "top": 500, "left": 250, "attrs": { "i2cAddress": "0x3c" } },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": 650, "left": 250, "attrs": {} }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
@@ -18,6 +22,20 @@
     [ "dht:SDA", "esp:16", "green", [] ],
     [ "ldr:VCC", "esp:3V3", "red", [] ],
     [ "ldr:GND", "esp:GND.1", "black", [] ],
-    [ "ldr:AO", "esp:34", "green", [] ]
+    [ "ldr:AO", "esp:34", "green", [] ],
+    [ "pir:VCC", "esp:3V3", "red", [] ],
+    [ "pir:GND", "esp:GND.1", "black", [] ],
+    [ "pir:OUT", "esp:27", "green", [] ],
+    [ "encoder:VCC", "esp:3V3", "red", [] ],
+    [ "encoder:GND", "esp:GND.1", "black", [] ],
+    [ "encoder:CLK", "esp:25", "green", [] ],
+    [ "encoder:DT", "esp:26", "green", [] ],
+    [ "encoder:SW", "esp:33", "green", [] ],
+    [ "oled:VCC", "esp:3V3", "red", [] ],
+    [ "oled:GND", "esp:GND.1", "black", [] ],
+    [ "oled:SDA", "esp:21", "green", [] ],
+    [ "oled:SCL", "esp:22", "green", [] ],
+    [ "buzzer:1", "esp:GND.1", "black", [] ],
+    [ "buzzer:2", "esp:32", "green", [] ]
   ]
 }
