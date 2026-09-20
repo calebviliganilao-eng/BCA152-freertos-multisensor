@@ -4,34 +4,25 @@
 #include <stdio.h>
 
 void DisplayTask(void *pvParameters) {
-    struct SensorData receivedData;
-
+    struct SensorData data;
     for (;;) {
-        if (xQueueReceive(sensorQueue, &receivedData, portMAX_DELAY) == pdPASS) {
+        if (xQueueReceive(sensorQueue, &data, portMAX_DELAY) == pdPASS) {
+            EventBits_t currentEvents = xEventGroupGetBits(systemEvents);
             
             xSemaphoreTake(serialMutex, portMAX_DELAY);
-            
-            printf("\n--------------------\n");
-            printf("ROOM MONITOR\n");
-            
-            // Switch output based on encoder position
-            switch(currentDisplayMode) {
-                case DisplayMode::TEMPERATURE:
-                    printf("Temperature\n%.1f C\n", receivedData.temperature);
-                    break;
-                case DisplayMode::HUMIDITY:
-                    printf("Humidity\n%.1f %%\n", receivedData.humidity);
-                    break;
-                case DisplayMode::LIGHT:
-                    printf("Light Level\n%d %%\n", receivedData.lightLevel);
-                    break;
-                case DisplayMode::MOTION:
-                    printf("Motion\n%s\n", receivedData.motionDetected ? "DETECTED" : "Clear");
-                    break;
+            printf("\n--- ROOM MONITOR ---\n");
+            switch (currentDisplayMode) {
+                case MODE_TEMPERATURE: printf("Temperature: %.1f C\n", data.temperature); break;
+                case MODE_HUMIDITY:    printf("Humidity: %.1f %%\n", data.humidity); break;
+                case MODE_LIGHT:       printf("Light Level: %d\n", data.lightLevel); break;
+                case MODE_MOTION:      printf("Motion: %s\n", data.motionDetected ? "DETECTED" : "Clear"); break;
             }
             
+            printf("\n--- SYSTEM STATUS ---\n");
+            if (currentEvents & EVENT_ACTIVE) printf("Status: SYSTEM ACTIVE\n");
+            if (currentEvents & EVENT_MOTION) printf("Alert: MOTION DETECTED\n");
+            if (currentEvents & EVENT_ALARM)  printf("Alert: ALARM TRIGGERED (HIGH TEMP)\n");
             printf("--------------------\n");
-            
             xSemaphoreGive(serialMutex);
         }
     }
