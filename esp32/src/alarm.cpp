@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 void AlarmTask(void *pvParameters) {
+    (void)pvParameters; // Static analysis fix
     struct SensorData data;
     for (;;) {
         if (xQueuePeek(sensorQueue, &data, portMAX_DELAY) == pdPASS) {

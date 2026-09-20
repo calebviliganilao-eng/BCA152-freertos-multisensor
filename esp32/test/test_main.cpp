@@ -1,15 +1,8 @@
 #include <unity.h>
 
-// Unity requires these two functions to exist to link successfully!
-void setUp(void) {
-    // Empty setup
-}
+void setUp(void) {}
+void tearDown(void) {}
 
-void tearDown(void) {
-    // Empty cleanup
-}
-
-// 1. Define enums locally so we don't need ESP32/FreeRTOS headers
 enum DisplayMode {
     MODE_TEMPERATURE,
     MODE_HUMIDITY,
@@ -19,9 +12,6 @@ enum DisplayMode {
 
 enum SystemState { INACTIVE, ACTIVE };
 
-// =======================================================================
-// 2. HARDWARE-INDEPENDENT APPLICATION LOGIC
-// =======================================================================
 int evaluateTemperature(float temp) {
     if (temp < 15.0) return -1;
     if (temp > 30.0) return 1;
@@ -44,9 +34,6 @@ SystemState evaluateSystemState(SystemState currentState, bool motion, bool time
     return currentState;
 }
 
-// =======================================================================
-// 3. THE 13 REQUIRED UNIT TESTS
-// =======================================================================
 void test_temp_below_lower(void)   { TEST_ASSERT_EQUAL(-1, evaluateTemperature(10.0)); }
 void test_temp_exactly_lower(void) { TEST_ASSERT_EQUAL(0, evaluateTemperature(15.0)); }
 void test_temp_normal(void)        { TEST_ASSERT_EQUAL(0, evaluateTemperature(25.4)); }
@@ -63,9 +50,6 @@ void test_state_active_timeout(void)     { TEST_ASSERT_EQUAL(INACTIVE, evaluateS
 void test_state_inactive_no_motion(void) { TEST_ASSERT_EQUAL(INACTIVE, evaluateSystemState(INACTIVE, false, false)); }
 void test_state_inactive_motion(void)    { TEST_ASSERT_EQUAL(ACTIVE, evaluateSystemState(INACTIVE, true, false)); }
 
-// =======================================================================
-// 4. UNITY RUNNER
-// =======================================================================
 int main(int argc, char **argv) {
     UNITY_BEGIN();
     

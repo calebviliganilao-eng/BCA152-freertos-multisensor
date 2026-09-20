@@ -4,9 +4,10 @@
 #include <stdio.h>
 
 void SensorTask(void *pvParameters) {
+    (void)pvParameters; // Static analysis fix
     struct SensorData data;
     for (;;) {
-        data.temperature = 25.4; // Set > 30.0 to test alarm
+        data.temperature = 25.4; 
         data.humidity = 50.0;    
         data.lightLevel = 2048;  
         data.motionDetected = true; 

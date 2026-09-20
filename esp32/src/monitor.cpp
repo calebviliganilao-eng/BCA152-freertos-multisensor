@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 void MonitorTask(void *pvParameters) {
+    (void)pvParameters; // Static analysis fix
     for (;;) {
         xSemaphoreTake(serialMutex, portMAX_DELAY);
         printf("\n[SYSTEM MONITOR] Free RTOS Heap: %d bytes\n", xPortGetFreeHeapSize());
