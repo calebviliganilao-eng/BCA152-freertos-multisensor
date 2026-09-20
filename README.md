@@ -79,4 +79,8 @@ A robust, multi-threaded real-time room monitoring system built for the ESP32 mi
 ├── test/              # Unit testing modules
 ├── platformio.ini     # PlatformIO build and static analysis configuration
 ├── wokwi.toml         # Wokwi simulation configuration
+<<<<<<< HEAD
 └── README.md          # Public project documentation
+=======
+└── README.md          # Public project documentation
+>>>>>>> fcbc7448ffc8941cccb25785f824e1c156ee3c0f
