@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "author": "BCA152",
+  "editor": "wokwi",
+  "serialMonitor": {
+    "display": "always"
+  },
+  "parts": [
+    { "type": "board-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht", "top": -100, "left": 250, "attrs": {} },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr", "top": 50, "left": 250, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "dht:VCC", "esp:3V3", "red", [] ],
+    [ "dht:GND", "esp:GND.1", "black", [] ],
+    [ "dht:SDA", "esp:16", "green", [] ],
+    [ "ldr:VCC", "esp:3V3", "red", [] ],
+    [ "ldr:GND", "esp:GND.1", "black", [] ],
+    [ "ldr:AO", "esp:34", "green", [] ]
+  ]
+}
