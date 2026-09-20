@@ -1,8 +1,8 @@
 #pragma once
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "freertos/semphr.h" // Required for mutex functions
 
-// Step 24: Define Sensor Data
 struct SensorData {
     float temperature;
     float humidity;
@@ -10,5 +10,5 @@ struct SensorData {
     bool motionDetected;
 };
 
-// Declare the queue globally so multiple tasks can access it
 extern QueueHandle_t sensorQueue;
+extern SemaphoreHandle_t serialMutex; // Shares the mutex across all your .cpp files
