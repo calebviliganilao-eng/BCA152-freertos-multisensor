@@ -1,16 +1,26 @@
-# BCA152 FreeRTOS Multisensor Room Monitoring System
+# 🌡️ ESP32 Real-Time Room Monitoring System
 
-## Project Overview
-A robust, multi-threaded real-time room monitoring system built for the ESP32 microcontroller using FreeRTOS, PlatformIO, and the Wokwi simulation environment. The system concurrently handles sensor acquisition, OLED UI navigation, motion detection, and alarm logic while ensuring deterministic execution and thread safety.
+![C++](https://img.shields.io/badge/Language-C++-00599C?logo=c%2B%2B)
+![Framework](https://img.shields.io/badge/Framework-ESP--IDF%20%2F%20FreeRTOS-E7352C?logo=espressif)
+![Environment](https://img.shields.io/badge/Environment-PlatformIO-F6822B?logo=platformio)
+![Status](https://img.shields.io/badge/Build-Passing-brightgreen)
 
-## Features
-* **Real-Time Multi-Threading:** Operates dedicated tasks for sensors, UI display, rotary encoder inputs, and system monitoring using FreeRTOS primitives.
-* **Inter-Task Communication:** Utilizes thread-safe queues (`xQueue`) for sensor telemetry and event groups (`xEventGroup`) for system state transitions.
-* **Resource Protection:** Implements mutex semaphores (`SemaphoreHandle_t`) to prevent race conditions during serial terminal logging and display updates.
-* **Fault Handling & Simulation:** Designed with robust task scheduling, configurable priorities, and fault isolation mechanisms.
+> **Note:** Insert a GIF or image of your physical hardware setup or Wokwi simulation running here to immediately grab the reader's attention.
 
-## System & FreeRTOS Architecture
-The system utilizes a preemptive priority scheme separating critical safety tasks from background UI rendering. It relies on tick-based scheduling with configured blocking delays (`vTaskDelayUntil`) to prevent CPU starvation.
+## 📌 Project Overview
+This project is a multi-threaded, real-time room monitoring system built for the ESP32. Designed to demonstrate industry-standard embedded software principles, the firmware concurrently handles environmental data acquisition, OLED UI navigation, unauthorized motion detection, and immediate hardware alarms. 
+
+It is engineered with a strict focus on **deterministic execution** and **thread safety**, utilizing FreeRTOS primitives to prevent CPU starvation, race conditions, and UI blocking.
+
+## 🚀 Key Engineering Features
+* **Preemptive RTOS Scheduling:** Workloads are distributed across 5 distinct FreeRTOS tasks with explicitly assigned priorities, ensuring critical safety alerts preempt background UI rendering.
+* **Thread-Safe IPC:** Data and state transitions are handled securely using `xQueue` (sensor telemetry) and `xEventGroup` (global state flags).
+* **Resource Protection:** Shared resources, such as the I2C display and serial terminal, are protected via `SemaphoreHandle_t` (Mutexes) to prevent race conditions.
+* **Deterministic Timing:** Sensor polling utilizes `vTaskDelayUntil()` to eliminate timing drift commonly caused by standard blocking delays.
+* **Test-Driven Design:** Built with PlatformIO, incorporating modular testing environments for both native unit testing and physical ESP32 target builds.
+
+## 🧠 System Architecture & Task Hierarchy
+The software architecture follows a strictly decoupled approach. Hardware inputs trigger state changes, which are processed via IPC, eventually driving hardware outputs.
 
 ```mermaid
 graph TD
@@ -61,7 +71,7 @@ graph TD
     DispTask --> OLED
     AlrmTask --> BUZ
 
-    %% Mutex Locks (Routed neatly at the bottom)
+    %% Mutex Locks 
     SensTask -. Locks .-> MUT
     InpTask -. Locks .-> MUT
     MonTask -. Locks .-> MUT
