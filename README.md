@@ -52,7 +52,13 @@ The system separates hardware-polling, rendering, and logic into distinct layers
 
 ## System State Machine
 
-*(Insert your state-machine-diagram.jpg here)*
+stateDiagram-v2
+    [*] --> ACTIVE : System Boot
+    
+    ACTIVE --> INACTIVE : No motion for 15 seconds
+    ACTIVE --> ACTIVE : Motion detected (timer resets)
+    
+    INACTIVE --> ACTIVE : PIR motion detected
 
 The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluates the PIR sensor. If the room remains vacant (no motion detected) for a continuous 15-second window, the system enters the **INACTIVE** state, clearing the OLED screen. Any subsequent PIR trigger immediately resets the timer and restores the **ACTIVE** state.
 
