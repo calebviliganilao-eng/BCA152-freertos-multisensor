@@ -34,13 +34,15 @@ Developed for **BCA152 Microcontrollers**, Mindanao State University – Iligan 
 
 ## System Architecture
 
-*(Insert your architecture-diagram.jpg here)*
+<img width="827" height="622" alt="image" src="https://github.com/user-attachments/assets/f78816b2-a99a-48fc-a2f5-ec4e5a229c04" />
+
 
 The system separates hardware-polling, rendering, and logic into distinct layers. Environmental sensors feed data into the FreeRTOS processing layer, which subsequently drives the output layer (OLED and Buzzer) based on strict task priorities.
 
 ## FreeRTOS Task Communication
 
-*(Insert your task-communication-diagram.jpg here)*
+<img width="681" height="675" alt="image" src="https://github.com/user-attachments/assets/221f7448-e786-4101-bf14-78b8811f129a" />
+
 
 **Synchronization Primitives Used:**
 *   `sensorQueue` — Safely transports the complete `SensorData` struct from the polling `SensorTask` to the rendering `DisplayTask`.
@@ -52,7 +54,8 @@ The system separates hardware-polling, rendering, and logic into distinct layers
 
 ## System State Machine
 
-![Uploading image.png…]()
+<img width="788" height="571" alt="image" src="https://github.com/user-attachments/assets/7b1ee520-39ff-4be5-ad5e-a143dd58f104" />
+
 
 
 The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluates the PIR sensor. If the room remains vacant (no motion detected) for a continuous 15-second window, the system enters the **INACTIVE** state, clearing the OLED screen. Any subsequent PIR trigger immediately resets the timer and restores the **ACTIVE** state.
