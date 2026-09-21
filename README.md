@@ -34,6 +34,7 @@ Developed for **BCA152 Microcontrollers**, Mindanao State University – Iligan 
 
 ## System Architecture
 
+<<<<<<< HEAD
 *(Insert your architecture-diagram.jpg here)*
 
 The system separates hardware-polling, rendering, and logic into distinct layers. Environmental sensors feed data into the FreeRTOS processing layer, which subsequently drives the output layer (OLED and Buzzer) based on strict task priorities.
@@ -42,6 +43,18 @@ The system separates hardware-polling, rendering, and logic into distinct layers
 
 *(Insert your task-communication-diagram.jpg here)*
 
+=======
+<img width="827" height="622" alt="image" src="https://github.com/user-attachments/assets/f78816b2-a99a-48fc-a2f5-ec4e5a229c04" />
+
+
+The system separates hardware-polling, rendering, and logic into distinct layers. Environmental sensors feed data into the FreeRTOS processing layer, which subsequently drives the output layer (OLED and Buzzer) based on strict task priorities.
+
+## FreeRTOS Task Communication
+
+<img width="681" height="675" alt="image" src="https://github.com/user-attachments/assets/221f7448-e786-4101-bf14-78b8811f129a" />
+
+
+>>>>>>> 62c9cd7d8695379294d3a13f944491b6976b11b6
 **Synchronization Primitives Used:**
 *   `sensorQueue` — Safely transports the complete `SensorData` struct from the polling `SensorTask` to the rendering `DisplayTask`.
 *   `alarmQueue` — A dedicated boolean queue ensuring the `AlarmTask` receives immediate threshold breach notifications from the `SensorTask`.
@@ -52,7 +65,13 @@ The system separates hardware-polling, rendering, and logic into distinct layers
 
 ## System State Machine
 
+<<<<<<< HEAD
 *(Insert your state-machine-diagram.jpg here)*
+=======
+<img width="788" height="571" alt="image" src="https://github.com/user-attachments/assets/7b1ee520-39ff-4be5-ad5e-a143dd58f104" />
+
+
+>>>>>>> 62c9cd7d8695379294d3a13f944491b6976b11b6
 
 The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluates the PIR sensor. If the room remains vacant (no motion detected) for a continuous 15-second window, the system enters the **INACTIVE** state, clearing the OLED screen. Any subsequent PIR trigger immediately resets the timer and restores the **ACTIVE** state.
 
@@ -61,10 +80,19 @@ The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluat
 ## Visual Verification
 
 ### Wokwi Circuit Diagram
+<<<<<<< HEAD
 *(Insert your wokwi-circuit.png here)*
 
 ### Finished System (Running Simulation)
 *(Insert your finished-system.png here)*
+=======
+<img width="690" height="518" alt="image" src="https://github.com/user-attachments/assets/c8ca1888-cba5-465e-a637-33c45b626841" />
+
+
+### Finished System (Running Simulation)
+<img width="775" height="547" alt="image" src="https://github.com/user-attachments/assets/b2651736-85b8-480a-97d7-948e64bee4b8" />
+
+>>>>>>> 62c9cd7d8695379294d3a13f944491b6976b11b6
 
 ---
 
@@ -85,7 +113,18 @@ The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluat
 ```text
 bca152-freertos-multisensor/
 ├── include/
+<<<<<<< HEAD
 │   └── rtos_objects.h
+=======
+│   ├── alarm.h
+│   ├── display.h
+│   ├── input.h
+│   ├── motion.h
+│   ├── README
+│   ├── rtos_objects.h
+│   ├── sensors.h
+│   └── system_state.h
+>>>>>>> 62c9cd7d8695379294d3a13f944491b6976b11b6
 ├── src/
 │   ├── main.cpp
 │   ├── alarm.cpp
@@ -101,4 +140,8 @@ bca152-freertos-multisensor/
 │   └── images/
 ├── diagram.json
 ├── wokwi.toml
+<<<<<<< HEAD
 └── platformio.ini
+=======
+└── platformio.ini
+>>>>>>> 62c9cd7d8695379294d3a13f944491b6976b11b6
