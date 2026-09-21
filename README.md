@@ -13,43 +13,57 @@ A robust, multi-threaded real-time room monitoring system built for the ESP32 mi
 The system utilizes a preemptive priority scheme separating critical safety tasks from background UI rendering. It relies on tick-based scheduling with configured blocking delays (`vTaskDelayUntil`) to prevent CPU starvation.
 
 ```mermaid
-graph LR
-    %% Hardware Inputs
-    DHT22[DHT22 Sensor] --> SensTask
-    LDR[LDR Sensor] --> SensTask
-    PIR[PIR Sensor] --> MonTask
-    ENC[Rotary Encoder] --> InpTask
+graph TD
+    subgraph Hardware Inputs
+        DHT22[DHT22 Sensor]
+        LDR[LDR Sensor]
+        ENC[Rotary Encoder]
+        PIR[PIR Sensor]
+    end
 
-    %% FreeRTOS Tasks
-    SensTask("SensorTask [P2]")
-    MonTask("MonitorTask [P1]")
-    InpTask("InputTask [P3]")
-    DispTask("DisplayTask [P1]")
-    AlrmTask("AlarmTask [P4]")
+    subgraph FreeRTOS Tasks
+        SensTask("SensorTask [P2]")
+        InpTask("InputTask [P3]")
+        MonTask("MonitorTask [P1]")
+        DispTask("DisplayTask [P1]")
+        AlrmTask("AlarmTask [P4]")
+    end
 
-    %% FreeRTOS IPC
-    SQ[(sensorQueue)]
-    EG{systemEvents}
-    MUT[serialMutex]
+    subgraph IPC Mechanisms
+        SQ[(sensorQueue)]
+        EG{systemEvents}
+        MUT[serialMutex]
+    end
 
-    %% Data Flow
-    SensTask -- Writes Data --> SQ
-    SQ -- Reads Data --> DispTask
-    SQ -- Peeks Data --> AlrmTask
-    
-    InpTask -- Sets State --> EG
-    MonTask -- Sets Flags --> EG
-    EG -- Reads State --> DispTask
+    subgraph Hardware Outputs
+        OLED[OLED Screen]
+        BUZ[Buzzer]
+    end
+
+    %% Data Acquisition
+    DHT22 --> SensTask
+    LDR --> SensTask
+    ENC --> InpTask
+    PIR --> MonTask
+
+    %% Writing to IPC
+    SensTask -- Writes --> SQ
+    InpTask -- Sets --> EG
+    MonTask -- Flags --> EG
+
+    %% Reading from IPC
+    SQ -- Reads --> DispTask
+    SQ -- Peeks --> AlrmTask
+    EG -- State --> DispTask
     EG -- Triggers --> AlrmTask
 
-    %% Mutex Locks (All Tasks)
-    InpTask -. Locks .-> MUT
-    DispTask -. Locks .-> MUT
+    %% Hardware Control
+    DispTask --> OLED
+    AlrmTask --> BUZ
+
+    %% Mutex Locks (Routed neatly at the bottom)
     SensTask -. Locks .-> MUT
-    AlrmTask -. Locks .-> MUT
+    InpTask -. Locks .-> MUT
     MonTask -. Locks .-> MUT
-    
-    %% Hardware Outputs
-    DispTask --> OLED[OLED Screen]
-    AlrmTask --> BUZ[Buzzer]
-    AlrmTask --> BUZ[Buzzer]
+    DispTask -. Locks .-> MUT
+    AlrmTask -. Locks .-> MUT
