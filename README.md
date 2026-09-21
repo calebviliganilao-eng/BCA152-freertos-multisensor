@@ -91,7 +91,14 @@ The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluat
 ```text
 bca152-freertos-multisensor/
 ├── include/
-│   └── rtos_objects.h
+│   ├── alarm.h
+│   ├── display.h
+│   ├── input.h
+│   ├── motion.h
+│   ├── README
+│   ├── rtos_objects.h
+│   ├── sensors.h
+│   └── system_state.h
 ├── src/
 │   ├── main.cpp
 │   ├── alarm.cpp
