@@ -65,7 +65,8 @@ The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluat
 
 
 ### Finished System (Running Simulation)
-*(Insert your finished-system.png here)*
+<img width="775" height="547" alt="image" src="https://github.com/user-attachments/assets/b2651736-85b8-480a-97d7-948e64bee4b8" />
+
 
 ---
 
