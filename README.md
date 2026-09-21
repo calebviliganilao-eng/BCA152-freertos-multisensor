@@ -34,7 +34,7 @@ graph TD
     subgraph FreeRTOS Tasks
         SensTask("SensorTask [P2]")
         InpTask("InputTask [P3]")
-        MonTask("MonitorTask [P1]")
+        MonTask("MotionTask [P1]")
         DispTask("DisplayTask [P1]")
         AlrmTask("AlarmTask [P4]")
     end
@@ -54,12 +54,12 @@ graph TD
     DHT22 --> SensTask
     LDR --> SensTask
     ENC --> InpTask
-    PIR --> MonTask
+    PIR --> MotTask
 
     %% Writing to IPC
     SensTask -- Writes --> SQ
     InpTask -- Sets --> EG
-    MonTask -- Flags --> EG
+    MotTask -- Flags --> EG
 
     %% Reading from IPC
     SQ -- Reads --> DispTask
@@ -74,6 +74,6 @@ graph TD
     %% Mutex Locks 
     SensTask -. Locks .-> MUT
     InpTask -. Locks .-> MUT
-    MonTask -. Locks .-> MUT
+    MotTask -. Locks .-> MUT
     DispTask -. Locks .-> MUT
     AlrmTask -. Locks .-> MUT
