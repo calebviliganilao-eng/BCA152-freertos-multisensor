@@ -33,14 +33,23 @@ graph LR
     MUT[serialMutex]
 
     %% Data Flow
-    SensTask -- Sends Data --> SQ
+    SensTask -- Writes Data --> SQ
     SQ -- Reads Data --> DispTask
+    SQ -- Peeks Data --> AlrmTask
+    
+    InpTask -- Sets State --> EG
     MonTask -- Sets Flags --> EG
-    InpTask -- Sets Flags --> EG
+    EG -- Reads State --> DispTask
     EG -- Triggers --> AlrmTask
+
+    %% Mutex Locks (All Tasks)
     InpTask -. Locks .-> MUT
     DispTask -. Locks .-> MUT
+    SensTask -. Locks .-> MUT
+    AlrmTask -. Locks .-> MUT
+    MonTask -. Locks .-> MUT
     
     %% Hardware Outputs
     DispTask --> OLED[OLED Screen]
+    AlrmTask --> BUZ[Buzzer]
     AlrmTask --> BUZ[Buzzer]
