@@ -1,41 +1,44 @@
 {
   "version": 1,
-  "author": "BCA152",
+  "author": "BCA152 Student",
   "editor": "wokwi",
-  "serialMonitor": {
-    "display": "always"
-  },
   "parts": [
-    { "type": "board-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-dht22", "id": "dht", "top": -100, "left": 250, "attrs": {} },
-    { "type": "wokwi-photoresistor-sensor", "id": "ldr", "top": 50, "left": 250, "attrs": {} },
-    { "type": "wokwi-pir-motion-sensor", "id": "pir", "top": 200, "left": 250, "attrs": {} },
-    { "type": "wokwi-ky-040", "id": "encoder", "top": 350, "left": 250, "attrs": {} },
-    { "type": "board-ssd1306", "id": "oled", "top": 500, "left": 250, "attrs": { "i2cAddress": "0x3c" } },
-    { "type": "wokwi-buzzer", "id": "buzzer", "top": 650, "left": 250, "attrs": {} }
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 100, "left": 150, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht", "top": -50, "left": -50, "attrs": {} },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr", "top": 100, "left": -50, "attrs": {} },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir", "top": 250, "left": -50, "attrs": {} },
+    { "type": "board-ssd1306", "id": "oled", "top": 100, "left": 450, "attrs": {} },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": -50, "left": 450, "attrs": {} },
+    { "type": "wokwi-ky-040", "id": "encoder", "top": 350, "left": 150, "attrs": {} }
   ],
   "connections": [
-    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
-    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
-    [ "dht:VCC", "esp:3V3", "red", [] ],
-    [ "dht:GND", "esp:GND.1", "black", [] ],
-    [ "dht:SDA", "esp:16", "green", [] ],
-    [ "ldr:VCC", "esp:3V3", "red", [] ],
-    [ "ldr:GND", "esp:GND.1", "black", [] ],
-    [ "ldr:AO", "esp:34", "green", [] ],
-    [ "pir:VCC", "esp:3V3", "red", [] ],
-    [ "pir:GND", "esp:GND.1", "black", [] ],
-    [ "pir:OUT", "esp:27", "green", [] ],
-    [ "encoder:VCC", "esp:3V3", "red", [] ],
-    [ "encoder:GND", "esp:GND.1", "black", [] ],
-    [ "encoder:CLK", "esp:25", "green", [] ],
-    [ "encoder:DT", "esp:26", "green", [] ],
-    [ "encoder:SW", "esp:33", "green", [] ],
-    [ "oled:VCC", "esp:3V3", "red", [] ],
-    [ "oled:GND", "esp:GND.1", "black", [] ],
-    [ "oled:SDA", "esp:21", "green", [] ],
-    [ "oled:SCL", "esp:22", "green", [] ],
-    [ "buzzer:1", "esp:GND.1", "black", [] ],
-    [ "buzzer:2", "esp:32", "green", [] ]
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    
+    [ "esp:GND.1", "oled:GND", "black", [ "v0" ] ],
+    [ "esp:3V3", "oled:VCC", "red", [ "v0" ] ],
+    [ "esp:21", "oled:SDA", "blue", [ "v0" ] ],
+    [ "esp:22", "oled:SCL", "yellow", [ "v0" ] ],
+    
+    [ "esp:GND.2", "encoder:GND", "black", [ "v0" ] ],
+    [ "esp:3V3", "encoder:VCC", "red", [ "v0" ] ],
+    [ "encoder:CLK", "esp:18", "purple", [ "v0" ] ],
+    [ "encoder:DT", "esp:19", "gray", [ "v0" ] ],
+    [ "encoder:SW", "esp:23", "white", [ "v0" ] ],
+    
+    [ "esp:GND.3", "dht:GND", "black", [ "v0" ] ],
+    [ "esp:3V3", "dht:VCC", "red", [ "v0" ] ],
+    [ "dht:SDA", "esp:4", "green", [ "v0" ] ],
+    
+    [ "esp:GND.1", "pir:GND", "black", [ "v0" ] ],
+    [ "esp:5V", "pir:VCC", "red", [ "v0" ] ],
+    [ "pir:OUT", "esp:27", "green", [ "v0" ] ],
+    
+    [ "esp:GND.1", "ldr:GND", "black", [ "v0" ] ],
+    [ "esp:3V3", "ldr:VCC", "red", [ "v0" ] ],
+    [ "ldr:AO", "esp:34", "orange", [ "v0" ] ],
+    
+    [ "esp:GND.1", "buzzer:1", "black", [ "v0" ] ],
+    [ "esp:25", "buzzer:2", "red", [ "v0" ] ]
   ]
 }

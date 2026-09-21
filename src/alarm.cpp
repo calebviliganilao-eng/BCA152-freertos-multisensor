@@ -1,23 +1,25 @@
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "rtos_objects.h"
-#include <stdio.h>
+
+#define BUZZER_PIN 25
 
 void AlarmTask(void *pvParameters) {
-    (void)pvParameters; // Static analysis fix
-    struct SensorData data;
-    for (;;) {
-        if (xQueuePeek(sensorQueue, &data, portMAX_DELAY) == pdPASS) {
-            if (data.temperature > 30.0) {
-                xEventGroupSetBits(systemEvents, EVENT_ALARM);
-                
-                xSemaphoreTake(serialMutex, portMAX_DELAY);
-                printf("[ALARM WARNING] High Temperature Detected!\n");
-                xSemaphoreGive(serialMutex); 
-            } else {
-                xEventGroupClearBits(systemEvents, EVENT_ALARM);
+    pinMode(BUZZER_PIN, OUTPUT);
+    bool alarmActive = false;
+
+    while (1) {
+        // Wait for data from SensorTask via the Queue (Timeout 2 seconds)
+        if (xQueueReceive(alarmQueue, &alarmActive, pdMS_TO_TICKS(2000)) == pdPASS) {
+            if (xSemaphoreTake(serialMutex, portMAX_DELAY) == pdTRUE) {
+                Serial.println("[AlarmTask] Checking alarm state...");
+                xSemaphoreGive(serialMutex);
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(1000));
+
+        if (alarmActive) {
+            digitalWrite(BUZZER_PIN, HIGH);
+            vTaskDelay(pdMS_TO_TICKS(300));
+            digitalWrite(BUZZER_PIN, LOW);
+            vTaskDelay(pdMS_TO_TICKS(300));
+        }
     }
 }

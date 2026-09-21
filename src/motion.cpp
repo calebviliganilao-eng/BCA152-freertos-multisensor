@@ -3,7 +3,7 @@
 #define PIR_PIN 27
 #define INACTIVITY_TIMEOUT_MS 5000 
 
-void MonitorTask(void *pvParameters) {
+void MotionTask(void *pvParameters) {
     pinMode(PIR_PIN, INPUT);
     uint32_t lastMotionTime = xTaskGetTickCount() * portTICK_PERIOD_MS;
     bool systemActive = false;

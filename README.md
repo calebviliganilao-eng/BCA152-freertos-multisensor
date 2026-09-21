@@ -1,86 +1,79 @@
-# BCA152 FreeRTOS Multisensor Room Monitoring System
+#  ESP32 Real-Time Room Monitoring System
 
-## Project Overview
-A robust, multi-threaded real-time room monitoring system built for the ESP32 microcontroller using FreeRTOS, PlatformIO, and the Wokwi simulation environment. The system concurrent handles sensor acquisition, OLED UI navigation, motion detection, and alarm logic while ensuring deterministic execution and thread safety.
+![C++](https://img.shields.io/badge/Language-C++-00599C?logo=c%2B%2B)
+![Framework](https://img.shields.io/badge/Framework-ESP--IDF%20%2F%20FreeRTOS-E7352C?logo=espressif)
+![Environment](https://img.shields.io/badge/Environment-PlatformIO-F6822B?logo=platformio)
+![Status](https://img.shields.io/badge/Build-Passing-brightgreen)
 
----
+> **Note:** Insert a GIF or image of your physical hardware setup or Wokwi simulation running here to immediately grab the reader's attention.
 
-## Features
-* **Real-Time Multi-Threading:** Operates dedicated tasks for sensors, UI display, rotary encoder inputs, and system monitoring using FreeRTOS primitives.
-* **Inter-Task Communication:** Utilizes thread-safe queues (`xQueue`) for sensor telemetry and event groups (`xEventGroup`) for system state transitions.
-* **Resource Protection:** Implements mutex semaphores (`SemaphoreHandle_t`) to prevent race conditions during serial terminal logging.
-* **Fault Handling & Simulation:** Designed with robust task scheduling, configurable priorities, and fault isolation mechanisms.
+##  Project Overview
+This project is a multi-threaded, real-time room monitoring system built for the ESP32. Designed to demonstrate industry-standard embedded software principles, the firmware concurrently handles environmental data acquisition, OLED UI navigation, unauthorized motion detection, and immediate hardware alarms. 
 
----
+It is engineered with a strict focus on **deterministic execution** and **thread safety**, utilizing FreeRTOS primitives to prevent CPU starvation, race conditions, and UI blocking.
 
-## Learning Objectives
-* Master FreeRTOS task creation, priority assignment, and cooperative/preemptive scheduling mechanics.
-* Implement thread-safe synchronization patterns using queues, mutexes, and event flags on resource-constrained microcontrollers.
-* Apply industry-standard static analysis, unit testing, and version control workflows to embedded software development.
+##  Key Engineering Features
+* **Preemptive RTOS Scheduling:** Workloads are distributed across 5 distinct FreeRTOS tasks with explicitly assigned priorities, ensuring critical safety alerts preempt background UI rendering.
+* **Thread-Safe IPC:** Data and state transitions are handled securely using `xQueue` (sensor telemetry) and `xEventGroup` (global state flags).
+* **Resource Protection:** Shared resources, such as the I2C display and serial terminal, are protected via `SemaphoreHandle_t` (Mutexes) to prevent race conditions.
+* **Deterministic Timing:** Sensor polling utilizes `vTaskDelayUntil()` to eliminate timing drift commonly caused by standard blocking delays.
+* **Test-Driven Design:** Built with PlatformIO, incorporating modular testing environments for both native unit testing and physical ESP32 target builds.
 
----
+##  System Architecture & Task Hierarchy
+The software architecture follows a strictly decoupled approach. Hardware inputs trigger state changes, which are processed via IPC, eventually driving hardware outputs.
 
-## System Architecture
-*(Insert System Architecture Diagram here[cite: 11])*
-*Description: High-level architectural overview showing hardware integration, task separation, and control flow.*
+```mermaid
+graph TD
+    subgraph Hardware Inputs
+        DHT22[DHT22 Sensor]
+        LDR[LDR Sensor]
+        ENC[Rotary Encoder]
+        PIR[PIR Sensor]
+    end
 
----
+    subgraph FreeRTOS Tasks
+        SensTask("SensorTask [P2]")
+        InpTask("InputTask [P3]")
+        MonTask("MonitorTask [P1]")
+        DispTask("DisplayTask [P1]")
+        AlrmTask("AlarmTask [P4]")
+    end
 
-## FreeRTOS Architecture
-* **Task Priorities & Allocation:** Preemptive priority scheme separating critical safety tasks from background UI rendering.
-* **Scheduling Model:** Tick-based scheduling with configured blocking delays to prevent CPU starvation.
+    subgraph IPC Mechanisms
+        SQ[(sensorQueue)]
+        EG{systemEvents}
+        MUT[serialMutex]
+    end
 
----
+    subgraph Hardware Outputs
+        OLED[OLED Screen]
+        BUZ[Buzzer]
+    end
 
-## Hardware / Simulated Components
-* **MCU:** ESP32 Doit DevKit V1[cite: 5]
-* **Sensor Suite:** DHT22 (Temperature & Humidity), LDR (Light Intensity), PIR (Motion Detection)
-* **User Interface:** Rotary Encoder (Navigation), OLED Display (UI Page Cycling), Piezo Buzzer / Alarm Indicator
+    %% Data Acquisition
+    DHT22 --> SensTask
+    LDR --> SensTask
+    ENC --> InpTask
+    PIR --> MonTask
 
----
+    %% Writing to IPC
+    SensTask -- Writes --> SQ
+    InpTask -- Sets --> EG
+    MonTask -- Flags --> EG
 
-## Pin Configuration
-| Component | ESP32 Pin | Description |
-| :--- | :--- | :--- |
-| DHT22 Data | GPIO 4 | Temperature & Humidity Sensor |
-| LDR Analog | GPIO 34 | Ambient Light Sensor |
-| PIR Motion | GPIO 27 | Motion Detection Input |
-| Rotary Encoder (CLK/DT/SW) | GPIO 18, 19, 23 | UI Navigation Controls |
-| OLED Display (SDA/SCL) | GPIO 21, 22 | I2C Display Interface |
-| Alarm / Buzzer | GPIO 25 | Audio Warning Output |
+    %% Reading from IPC
+    SQ -- Reads --> DispTask
+    SQ -- Peeks --> AlrmTask
+    EG -- State --> DispTask
+    EG -- Triggers --> AlrmTask
 
----
+    %% Hardware Control
+    DispTask --> OLED
+    AlrmTask --> BUZ
 
-## Task Design
-* `SensorTask`: Periodically samples hardware telemetry and pushes updates to the shared queue.
-* `DisplayTask`: Manages UI page rendering and user feedback based on active menu selections.
-* `InputTask`: Polls rotary encoder and PIR states to drive system state machine events.
-* `AlarmTask`: Monitors threshold violations and triggers audio-visual alarms when limits are exceeded.
-
----
-
-## Inter-Task Communication
-*(Insert FreeRTOS Task-Communication Diagram here[cite: 11])*
-*Description: Flow chart illustrating data transfer via queues and synchronization via event groups.*
-
----
-
-## State Machine
-*(Insert State-Machine Diagram here[cite: 11])*
-*Description: Finite state machine governing active, inactive, and alarm operating modes.*
-
----
-
-## Repository Structure
-```text
-├── include/           # Header files and shared definitions
-├── lib/               # Custom modular library components
-├── src/               # Application source files (tasks, main)
-├── test/              # Unit testing modules
-├── platformio.ini     # PlatformIO build and static analysis configuration
-├── wokwi.toml         # Wokwi simulation configuration
-<<<<<<< HEAD
-└── README.md          # Public project documentation
-=======
-└── README.md          # Public project documentation
->>>>>>> fcbc7448ffc8941cccb25785f824e1c156ee3c0f
+    %% Mutex Locks 
+    SensTask -. Locks .-> MUT
+    InpTask -. Locks .-> MUT
+    MonTask -. Locks .-> MUT
+    DispTask -. Locks .-> MUT
+    AlrmTask -. Locks .-> MUT
