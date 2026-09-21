@@ -1,4 +1,4 @@
-# 🌡️ ESP32 Real-Time Room Monitoring System
+#  ESP32 Real-Time Room Monitoring System
 
 ![C++](https://img.shields.io/badge/Language-C++-00599C?logo=c%2B%2B)
 ![Framework](https://img.shields.io/badge/Framework-ESP--IDF%20%2F%20FreeRTOS-E7352C?logo=espressif)
@@ -7,19 +7,19 @@
 
 > **Note:** Insert a GIF or image of your physical hardware setup or Wokwi simulation running here to immediately grab the reader's attention.
 
-## 📌 Project Overview
+##  Project Overview
 This project is a multi-threaded, real-time room monitoring system built for the ESP32. Designed to demonstrate industry-standard embedded software principles, the firmware concurrently handles environmental data acquisition, OLED UI navigation, unauthorized motion detection, and immediate hardware alarms. 
 
 It is engineered with a strict focus on **deterministic execution** and **thread safety**, utilizing FreeRTOS primitives to prevent CPU starvation, race conditions, and UI blocking.
 
-## 🚀 Key Engineering Features
+##  Key Engineering Features
 * **Preemptive RTOS Scheduling:** Workloads are distributed across 5 distinct FreeRTOS tasks with explicitly assigned priorities, ensuring critical safety alerts preempt background UI rendering.
 * **Thread-Safe IPC:** Data and state transitions are handled securely using `xQueue` (sensor telemetry) and `xEventGroup` (global state flags).
 * **Resource Protection:** Shared resources, such as the I2C display and serial terminal, are protected via `SemaphoreHandle_t` (Mutexes) to prevent race conditions.
 * **Deterministic Timing:** Sensor polling utilizes `vTaskDelayUntil()` to eliminate timing drift commonly caused by standard blocking delays.
 * **Test-Driven Design:** Built with PlatformIO, incorporating modular testing environments for both native unit testing and physical ESP32 target builds.
 
-## 🧠 System Architecture & Task Hierarchy
+##  System Architecture & Task Hierarchy
 The software architecture follows a strictly decoupled approach. Hardware inputs trigger state changes, which are processed via IPC, eventually driving hardware outputs.
 
 ```mermaid
