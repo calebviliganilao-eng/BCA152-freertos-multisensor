@@ -61,7 +61,8 @@ The ESP32 boots into the **ACTIVE** state. The `MotionTask` continuously evaluat
 ## Visual Verification
 
 ### Wokwi Circuit Diagram
-*(Insert your wokwi-circuit.png here)*
+<img width="690" height="518" alt="image" src="https://github.com/user-attachments/assets/c8ca1888-cba5-465e-a637-33c45b626841" />
+
 
 ### Finished System (Running Simulation)
 *(Insert your finished-system.png here)*
